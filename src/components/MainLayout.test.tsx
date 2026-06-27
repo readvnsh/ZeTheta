@@ -7,6 +7,7 @@ describe('MainLayout', () => {
     // Check if the Next and Back buttons are in the document
     expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /back/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /next/i })).toBeDisabled(); // Should be disabled initially
+    expect(screen.getByRole('button', { name: /back/i })).toBeDisabled(); // Back button should be disabled initially
+    expect(screen.getByRole('button', { name: /next/i })).not.toBeDisabled(); // Next button should be enabled initially
   });
 });
