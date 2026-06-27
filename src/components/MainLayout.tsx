@@ -5,6 +5,7 @@ import Step3KYC from './Step3KYC';
 import Step4Address from './Step4Address';
 import Step5Employment from './Step5Employment';
 import Step6CoApplicant from './Step6CoApplicant';
+import Step7Documents from './Step7Documents';
 import useAutoSave from '../hooks/useAutoSave';
 import useFormPersistence from '../hooks/useFormPersistence';
 import DraftRecoveryModal from './DraftRecoveryModal';
@@ -38,7 +39,7 @@ export default function MainLayout() {
     { num: 5, label: 'Employment Details', icon: 'work' },
     ...(isStep6Required() ? [{ num: 6, label: 'Co-Applicant', icon: 'group' }] : []),
     {
-      num: 7, label: 'Documents', icon: 'description', disabled: true,
+      num: 7, label: 'Documents', icon: 'description',
     },
     {
       num: 8, label: 'Review & Submit', icon: 'send', disabled: true,
@@ -78,10 +79,12 @@ export default function MainLayout() {
     if (step === 3) return 'step3-form';
     if (step === 4) return 'step4-form';
     if (step === 5) return 'step5-form';
-    return 'step6-form';
+    if (step === 6) return 'step6-form';
+    return 'step7-form';
   };
 
   const getSubmitText = () => {
+    if (step === 7) return 'Proceed';
     if (step === 6) return 'Proceed';
     if (step === 5) return 'Proceed';
     return 'Next Step';
@@ -145,6 +148,7 @@ export default function MainLayout() {
             {step === 4 && <Step4Address />}
             {step === 5 && <Step5Employment />}
             {step === 6 && <Step6CoApplicant />}
+            {step === 7 && <Step7Documents />}
           </div>
           <DraftRecoveryModal
             show={showModal}

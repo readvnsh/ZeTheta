@@ -94,6 +94,9 @@ export default function useFormPersistence() {
         if (!check.success) throw new Error('Step 6 validation failed');
         storeState.setStep6Data(parsed.step6Data);
       }
+      if (parsed.step7Data) {
+        storeState.setStep7Data(parsed.step7Data);
+      }
 
       // Hydrate state
       storeState.setSpouseFieldsRequired(parsed.spouseFieldsRequired || false);

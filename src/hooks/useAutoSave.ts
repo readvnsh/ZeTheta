@@ -23,6 +23,7 @@ export default function useAutoSave() {
           step4Data: currentState.step4Data,
           step5Data: currentState.step5Data,
           step6Data: currentState.step6Data,
+          step7Data: currentState.step7Data,
           spouseFieldsRequired: currentState.spouseFieldsRequired,
           step3Consent: currentState.step3Consent,
           isPanVerified: currentState.isPanVerified,

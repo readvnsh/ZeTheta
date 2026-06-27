@@ -3,6 +3,19 @@ import {
   Step1FormData, Step2FormData, Step3Data, Step4FormData, Step5FormData, Step6FormData,
 } from '../schemas';
 
+export interface Step7StoreData {
+  panCard?: { name: string; size: number } | null;
+  aadhaarFront: { name: string; size: number } | null;
+  aadhaarBack: { name: string; size: number } | null;
+  salarySlips?: { name: string; size: number } | null;
+  bankStatements?: { name: string; size: number } | null;
+  itr?: { name: string; size: number } | null;
+  propertyDocs?: { name: string; size: number } | null;
+  businessReg?: { name: string; size: number } | null;
+  photograph: { name: string; size: number } | null;
+  signature: string | null; // base64 string
+}
+
 interface FormState {
   step: number;
   step1Data: Step1FormData | null;
@@ -11,6 +24,7 @@ interface FormState {
   step4Data: Step4FormData | null;
   step5Data: Step5FormData | null;
   step6Data: Step6FormData | null;
+  step7Data: Step7StoreData | null;
   spouseFieldsRequired: boolean;
   step3Consent: boolean;
   isPanVerified: boolean;
@@ -23,6 +37,7 @@ interface FormState {
   setStep4Data: (data: Step4FormData | null) => void;
   setStep5Data: (data: Step5FormData | null) => void;
   setStep6Data: (data: Step6FormData | null) => void;
+  setStep7Data: (data: Step7StoreData | null) => void;
   setSpouseFieldsRequired: (required: boolean) => void;
   setStep3Consent: (consent: boolean) => void;
   setPanVerified: (verified: boolean) => void;
@@ -40,6 +55,7 @@ const useFormStore = create<FormState>((set, get) => ({
   step4Data: null,
   step5Data: null,
   step6Data: null,
+  step7Data: null,
   spouseFieldsRequired: false,
   step3Consent: false,
   isPanVerified: false,
@@ -52,6 +68,7 @@ const useFormStore = create<FormState>((set, get) => ({
   setStep4Data: (data) => set({ step4Data: data }),
   setStep5Data: (data) => set({ step5Data: data }),
   setStep6Data: (data) => set({ step6Data: data }),
+  setStep7Data: (data) => set({ step7Data: data }),
   setSpouseFieldsRequired: (required) => set({ spouseFieldsRequired: required }),
   setStep3Consent: (consent) => set({ step3Consent: consent }),
   setPanVerified: (verified) => set({ isPanVerified: verified }),
@@ -75,6 +92,7 @@ const useFormStore = create<FormState>((set, get) => ({
     step4Data: null,
     step5Data: null,
     step6Data: null,
+    step7Data: null,
     spouseFieldsRequired: false,
     step3Consent: false,
     isPanVerified: false,
