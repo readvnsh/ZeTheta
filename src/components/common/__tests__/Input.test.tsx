@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
-import { Input } from '../Input';
 import React from 'react';
+import { Input } from '../Input';
 
 describe('Input Compound Component', () => {
   it('renders all compound components correctly', () => {
@@ -10,7 +10,7 @@ describe('Input Compound Component', () => {
         <Input.Field id="test-input" placeholder="Type here..." />
         <Input.Error>Error occurred</Input.Error>
         <Input.HelpText>Helpful text</Input.HelpText>
-      </Input>
+      </Input>,
     );
 
     expect(screen.getByText('Label')).toBeInTheDocument();
@@ -24,7 +24,7 @@ describe('Input Compound Component', () => {
     render(
       <Input>
         <Input.Field ref={ref} />
-      </Input>
+      </Input>,
     );
     expect(ref.current).toBeInstanceOf(HTMLInputElement);
   });

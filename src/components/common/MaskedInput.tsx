@@ -8,7 +8,9 @@ export interface MaskedInputProps extends Omit<React.InputHTMLAttributes<HTMLInp
 }
 
 export const MaskedInput = React.forwardRef<HTMLInputElement, MaskedInputProps>(
-  ({ value, defaultValue, onChange, hasError, className = '', onFocus, onBlur, ...props }, ref) => {
+  ({
+    value, defaultValue, onChange, hasError, className = '', onFocus, onBlur, ...props
+  }, ref) => {
     const [internalValue, setInternalValue] = useState<string>(defaultValue || '');
     const [isFocused, setIsFocused] = useState(false);
 
@@ -51,6 +53,6 @@ export const MaskedInput = React.forwardRef<HTMLInputElement, MaskedInputProps>(
         {...props}
       />
     );
-  }
+  },
 );
 MaskedInput.displayName = 'MaskedInput';

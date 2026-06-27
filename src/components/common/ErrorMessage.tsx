@@ -19,7 +19,7 @@ export const ErrorMessage = React.forwardRef<HTMLParagraphElement, ErrorMessageP
         {children}
       </p>
     );
-  }
+  },
 );
 
 ErrorMessage.displayName = 'ErrorMessage';

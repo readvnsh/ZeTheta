@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
-import { ErrorMessage } from '../ErrorMessage';
 import React from 'react';
+import { ErrorMessage } from '../ErrorMessage';
 
 describe('ErrorMessage', () => {
   it('renders children with correct ARIA attributes', () => {
