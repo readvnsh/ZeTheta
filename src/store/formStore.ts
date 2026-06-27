@@ -62,11 +62,72 @@ const useFormStore = create<FormState>((set, get) => ({
   isAadhaarVerified: false,
   isDraftLoaded: false,
   setStep: (step) => set({ step }),
-  setStep1Data: (data) => set({ step1Data: data }),
+  setStep1Data: (data) => {
+    const current = get().step1Data;
+    if (current && current.loanType !== data.loanType) {
+      // Clear gstNumber and businessName in Step 5 if changing loanType
+      const step5 = get().step5Data;
+      let newStep5 = step5;
+      if (step5) {
+        newStep5 = {
+          ...step5,
+          businessName: '',
+          gstNumber: '',
+        } as any;
+      }
+      // Remove businessReg and propertyDocs from Step 7 depending on type
+      const step7 = get().step7Data;
+      let newStep7 = step7;
+      if (step7) {
+        newStep7 = {
+          ...step7,
+          businessReg: data.loanType === 'Business' ? step7.businessReg : null,
+          propertyDocs: data.loanType === 'Home' ? step7.propertyDocs : null,
+        };
+      }
+      set({ step1Data: data, step5Data: newStep5, step7Data: newStep7 });
+    } else {
+      set({ step1Data: data });
+    }
+  },
   setStep2Data: (data) => set({ step2Data: data }),
   setStep3Data: (data) => set({ step3Data: data }),
   setStep4Data: (data) => set({ step4Data: data }),
-  setStep5Data: (data) => set({ step5Data: data }),
+  setStep5Data: (data) => {
+    const current = get().step5Data;
+    let cleanedData = data;
+    if (current && data && current.employmentType !== data.employmentType) {
+      // Clear fields belonging to other sub-forms
+      if (data.employmentType === 'SALARIED') {
+        cleanedData = {
+          employmentType: 'SALARIED',
+          companyName: data.companyName || '',
+          designation: data.designation || '',
+          monthlyNetSalary: data.monthlyNetSalary || 0,
+          yearsOfExperience: data.yearsOfExperience || 0,
+        } as any;
+      } else if (data.employmentType === 'SELF_EMPLOYED') {
+        cleanedData = {
+          employmentType: 'SELF_EMPLOYED',
+          businessName: data.businessName || '',
+          businessType: data.businessType || '',
+          yearsInBusiness: data.yearsInBusiness || 0,
+          monthlyIncome: data.monthlyIncome || 0,
+        } as any;
+      } else if (data.employmentType === 'BUSINESS_OWNER') {
+        cleanedData = {
+          employmentType: 'BUSINESS_OWNER',
+          businessName: data.businessName || '',
+          businessType: data.businessType || '',
+          annualTurnover: data.annualTurnover || 0,
+          yearsInBusiness: data.yearsInBusiness || 0,
+          officeAddress: data.officeAddress || '',
+          gstNumber: data.gstNumber || '',
+        } as any;
+      }
+    }
+    set({ step5Data: cleanedData });
+  },
   setStep6Data: (data) => set({ step6Data: data }),
   setStep7Data: (data) => set({ step7Data: data }),
   setSpouseFieldsRequired: (required) => set({ spouseFieldsRequired: required }),
