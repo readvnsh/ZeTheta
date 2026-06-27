@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import {
-  Step1FormData, Step2FormData, Step3Data, Step4FormData,
+  Step1FormData, Step2FormData, Step3Data, Step4FormData, Step5FormData,
 } from '../schemas';
 
 interface FormState {
@@ -9,6 +9,7 @@ interface FormState {
   step2Data: Step2FormData | null;
   step3Data: Step3Data | null;
   step4Data: Step4FormData | null;
+  step5Data: Step5FormData | null;
   spouseFieldsRequired: boolean;
   step3Consent: boolean;
   isPanVerified: boolean;
@@ -18,6 +19,7 @@ interface FormState {
   setStep2Data: (data: Step2FormData | null) => void;
   setStep3Data: (data: Step3Data | null) => void;
   setStep4Data: (data: Step4FormData | null) => void;
+  setStep5Data: (data: Step5FormData | null) => void;
   setSpouseFieldsRequired: (required: boolean) => void;
   setStep3Consent: (consent: boolean) => void;
   setPanVerified: (verified: boolean) => void;
@@ -31,6 +33,7 @@ const useFormStore = create<FormState>((set) => ({
   step2Data: null,
   step3Data: null,
   step4Data: null,
+  step5Data: null,
   spouseFieldsRequired: false,
   step3Consent: false,
   isPanVerified: false,
@@ -40,6 +43,7 @@ const useFormStore = create<FormState>((set) => ({
   setStep2Data: (data) => set({ step2Data: data }),
   setStep3Data: (data) => set({ step3Data: data }),
   setStep4Data: (data) => set({ step4Data: data }),
+  setStep5Data: (data) => set({ step5Data: data }),
   setSpouseFieldsRequired: (required) => set({ spouseFieldsRequired: required }),
   setStep3Consent: (consent) => set({ step3Consent: consent }),
   setPanVerified: (verified) => set({ isPanVerified: verified }),
@@ -50,6 +54,7 @@ const useFormStore = create<FormState>((set) => ({
     step2Data: null,
     step3Data: null,
     step4Data: null,
+    step5Data: null,
     spouseFieldsRequired: false,
     step3Consent: false,
     isPanVerified: false,

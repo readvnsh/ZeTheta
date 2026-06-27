@@ -3,6 +3,7 @@ import Step1LoanDetails from './Step1LoanDetails';
 import Step2PersonalInfo from './Step2PersonalInfo';
 import Step3KYC from './Step3KYC';
 import Step4Address from './Step4Address';
+import Step5Employment from './Step5Employment';
 
 export default function MainLayout() {
   const {
@@ -20,14 +21,15 @@ export default function MainLayout() {
     { num: 2, label: 'Personal Info', icon: 'person' },
     { num: 3, label: 'KYC & Verification', icon: 'security' },
     { num: 4, label: 'Address Info', icon: 'home' },
+    { num: 5, label: 'Employment Details', icon: 'work' },
     {
-      num: 5, label: 'Co-Applicant', icon: 'group', disabled: true,
+      num: 6, label: 'Co-Applicant', icon: 'group', disabled: true,
     },
     {
-      num: 6, label: 'Documents', icon: 'description', disabled: true,
+      num: 7, label: 'Documents', icon: 'description', disabled: true,
     },
     {
-      num: 7, label: 'Review & Submit', icon: 'send', disabled: true,
+      num: 8, label: 'Review & Submit', icon: 'send', disabled: true,
     },
   ];
 
@@ -62,11 +64,12 @@ export default function MainLayout() {
     if (step === 1) return 'step1-form';
     if (step === 2) return 'step2-form';
     if (step === 3) return 'step3-form';
-    return 'step4-form';
+    if (step === 4) return 'step4-form';
+    return 'step5-form';
   };
 
   const getSubmitText = () => {
-    if (step === 4) return 'Proceed';
+    if (step === 5) return 'Proceed';
     return 'Next Step';
   };
 
@@ -126,6 +129,7 @@ export default function MainLayout() {
             {step === 2 && <Step2PersonalInfo />}
             {step === 3 && <Step3KYC />}
             {step === 4 && <Step4Address />}
+            {step === 5 && <Step5Employment />}
           </div>
         </main>
       </div>
