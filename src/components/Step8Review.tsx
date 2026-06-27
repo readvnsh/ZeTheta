@@ -2,6 +2,7 @@ import { useState } from 'react';
 import useFormStore from '../store/formStore';
 import { calculateAmortization, formatINR } from '../utils/emiCalculator';
 import { Checkbox } from './common';
+import { generateSchema } from '../utils/schemaFactory';
 
 export default function Step8Review() {
   const store = useFormStore();
@@ -76,9 +77,26 @@ export default function Step8Review() {
     || (isDtiExceeded && !dtiAcknowledge)
     || isSubmitting;
 
+  const [ageTenureError, setAgeTenureError] = useState<string | null>(null);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmitDisabled) return;
+
+    // Validate consents & Age + Tenure using dynamic schemaFactory
+    const schema = generateSchema(8, store);
+    const parse = schema.safeParse({
+      consent1,
+      consent2,
+      consent3,
+      consent4,
+    });
+    if (!parse.success) {
+      const errorMsg = parse.error.errors[0]?.message || 'Validation failed';
+      setAgeTenureError(errorMsg);
+      return;
+    }
+    setAgeTenureError(null);
 
     setIsSubmitting(true);
     // Simulate mock API delay
@@ -449,6 +467,12 @@ export default function Step8Review() {
                 onChange={(e) => setConsent4(e.target.checked)}
               />
             </div>
+
+            {ageTenureError && (
+              <div className="p-3 text-xs text-red-600 bg-red-50 border border-red-100 rounded-lg">
+                {ageTenureError}
+              </div>
+            )}
 
             <button
               type="submit"

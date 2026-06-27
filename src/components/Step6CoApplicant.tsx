@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { step6Schema, Step6FormData } from '../schemas';
+import { Step6FormData } from '../schemas';
 import useFormStore from '../store/formStore';
 import useVerification from '../hooks/useVerification';
+import { generateSchema } from '../utils/schemaFactory';
 import { validatePan } from '../utils/validators';
 import {
   Input, Select, Checkbox, MaskedInput,
@@ -31,7 +32,7 @@ export default function Step6CoApplicant() {
     control,
     formState: { errors },
   } = useForm<Step6FormData>({
-    resolver: zodResolver(step6Schema),
+    resolver: zodResolver(generateSchema(6, useFormStore.getState())),
     defaultValues: step6Data || {
       coApplicantName: '',
       relationship: defaultRelationship as any,

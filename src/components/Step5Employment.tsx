@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { step5Schema, Step5FormData } from '../schemas';
+import { Step5FormData } from '../schemas';
 import useFormStore from '../store/formStore';
+import { generateSchema } from '../utils/schemaFactory';
 import { Input, Select, RadioGroup } from './common';
 
 const employmentTypeOptions = [
@@ -34,7 +35,7 @@ export default function Step5Employment() {
     clearErrors,
     formState: { errors },
   } = useForm<Step5FormData>({
-    resolver: zodResolver(step5Schema),
+    resolver: zodResolver(generateSchema(5, useFormStore.getState())),
     defaultValues: step5Data || {
       employmentType: 'SALARIED',
       companyName: '',
