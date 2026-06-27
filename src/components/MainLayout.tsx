@@ -4,14 +4,28 @@ import Step2PersonalInfo from './Step2PersonalInfo';
 import Step3KYC from './Step3KYC';
 import Step4Address from './Step4Address';
 import Step5Employment from './Step5Employment';
+import Step6CoApplicant from './Step6CoApplicant';
+import useAutoSave from '../hooks/useAutoSave';
+import useFormPersistence from '../hooks/useFormPersistence';
+import DraftRecoveryModal from './DraftRecoveryModal';
 
 export default function MainLayout() {
   const {
-    step, setStep, step3Consent, isPanVerified, isAadhaarVerified,
+    step, setStep, step3Consent, isPanVerified, isAadhaarVerified, isStep6Required,
   } = useFormStore();
 
+  // Initialize secure autosave hook in background
+  useAutoSave();
+
+  // Initialize draft recovery checks on mount
+  const {
+    showModal, draftInfo, handleResume, handleStartFresh,
+  } = useFormPersistence();
+
   const handleBack = () => {
-    if (step > 1) {
+    if (step === 7 && !isStep6Required()) {
+      setStep(5);
+    } else if (step > 1) {
       setStep(step - 1);
     }
   };
@@ -22,9 +36,7 @@ export default function MainLayout() {
     { num: 3, label: 'KYC & Verification', icon: 'security' },
     { num: 4, label: 'Address Info', icon: 'home' },
     { num: 5, label: 'Employment Details', icon: 'work' },
-    {
-      num: 6, label: 'Co-Applicant', icon: 'group', disabled: true,
-    },
+    ...(isStep6Required() ? [{ num: 6, label: 'Co-Applicant', icon: 'group' }] : []),
     {
       num: 7, label: 'Documents', icon: 'description', disabled: true,
     },
@@ -65,10 +77,12 @@ export default function MainLayout() {
     if (step === 2) return 'step2-form';
     if (step === 3) return 'step3-form';
     if (step === 4) return 'step4-form';
-    return 'step5-form';
+    if (step === 5) return 'step5-form';
+    return 'step6-form';
   };
 
   const getSubmitText = () => {
+    if (step === 6) return 'Proceed';
     if (step === 5) return 'Proceed';
     return 'Next Step';
   };
@@ -130,7 +144,14 @@ export default function MainLayout() {
             {step === 3 && <Step3KYC />}
             {step === 4 && <Step4Address />}
             {step === 5 && <Step5Employment />}
+            {step === 6 && <Step6CoApplicant />}
           </div>
+          <DraftRecoveryModal
+            show={showModal}
+            onResume={handleResume}
+            onStartFresh={handleStartFresh}
+            draftInfo={draftInfo}
+          />
         </main>
       </div>
 

@@ -21,7 +21,7 @@ const businessTypeOptions = [
 
 export default function Step5Employment() {
   const {
-    step1Data, step5Data, setStep5Data, setStep,
+    step1Data, step5Data, setStep5Data, setStep, isStep6Required,
   } = useFormStore();
   const loanType = step1Data?.loanType ?? 'Personal';
 
@@ -64,7 +64,7 @@ export default function Step5Employment() {
       return;
     }
     setStep5Data(data);
-    setStep(6); // Go to Step 6
+    setStep(isStep6Required() ? 6 : 7);
   };
 
   return (
