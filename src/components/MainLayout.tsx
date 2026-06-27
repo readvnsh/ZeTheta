@@ -6,6 +6,7 @@ import Step4Address from './Step4Address';
 import Step5Employment from './Step5Employment';
 import Step6CoApplicant from './Step6CoApplicant';
 import Step7Documents from './Step7Documents';
+import Step8Review from './Step8Review';
 import useAutoSave from '../hooks/useAutoSave';
 import useFormPersistence from '../hooks/useFormPersistence';
 import DraftRecoveryModal from './DraftRecoveryModal';
@@ -42,7 +43,7 @@ export default function MainLayout() {
       num: 7, label: 'Documents', icon: 'description',
     },
     {
-      num: 8, label: 'Review & Submit', icon: 'send', disabled: true,
+      num: 8, label: 'Review & Submit', icon: 'send',
     },
   ];
 
@@ -149,6 +150,7 @@ export default function MainLayout() {
             {step === 5 && <Step5Employment />}
             {step === 6 && <Step6CoApplicant />}
             {step === 7 && <Step7Documents />}
+            {step === 8 && <Step8Review />}
           </div>
           <DraftRecoveryModal
             show={showModal}
@@ -170,14 +172,16 @@ export default function MainLayout() {
           Back
         </button>
 
-        <button
-          type="submit"
-          form={getFormId()}
-          disabled={isNextDisabled()}
-          className="flex items-center gap-2 px-5 py-2 bg-[#00375e] text-white rounded-lg text-sm font-medium hover:bg-[#1f4e79] transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {getSubmitText()}
-        </button>
+        {step < 8 && (
+          <button
+            type="submit"
+            form={getFormId()}
+            disabled={isNextDisabled()}
+            className="flex items-center gap-2 px-5 py-2 bg-[#00375e] text-white rounded-lg text-sm font-medium hover:bg-[#1f4e79] transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {getSubmitText()}
+          </button>
+        )}
       </footer>
     </div>
   );
