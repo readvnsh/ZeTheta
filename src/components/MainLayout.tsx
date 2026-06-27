@@ -1,10 +1,11 @@
 import useFormStore from '../store/formStore';
 import Step1LoanDetails from './Step1LoanDetails';
 import Step2PersonalInfo from './Step2PersonalInfo';
+import Step3KYC from './Step3KYC';
 
 export default function MainLayout() {
   const {
-    step, setStep,
+    step, setStep, step3Consent, isPanVerified, isAadhaarVerified,
   } = useFormStore();
 
   const handleBack = () => {
@@ -16,14 +17,15 @@ export default function MainLayout() {
   const stepsList = [
     { num: 1, label: 'Loan Details', icon: 'payments' },
     { num: 2, label: 'Personal Info', icon: 'person' },
+    { num: 3, label: 'KYC & Verification', icon: 'security' },
     {
-      num: 3, label: 'Co-Applicant', icon: 'group', disabled: true,
+      num: 4, label: 'Co-Applicant', icon: 'group', disabled: true,
     },
     {
-      num: 4, label: 'Documents', icon: 'description', disabled: true,
+      num: 5, label: 'Documents', icon: 'description', disabled: true,
     },
     {
-      num: 5, label: 'Review & Submit', icon: 'send', disabled: true,
+      num: 6, label: 'Review & Submit', icon: 'send', disabled: true,
     },
   ];
 
@@ -45,6 +47,25 @@ export default function MainLayout() {
       return 'bg-[#006d37] text-white';
     }
     return 'bg-gray-100 text-gray-400';
+  };
+
+  const isNextDisabled = () => {
+    if (step === 3) {
+      return !step3Consent || !isPanVerified || !isAadhaarVerified;
+    }
+    return false;
+  };
+
+  const getFormId = () => {
+    if (step === 1) return 'step1-form';
+    if (step === 2) return 'step2-form';
+    return 'step3-form';
+  };
+
+  const getSubmitText = () => {
+    if (step === 3) return 'Proceed';
+    if (step === 2) return 'Submit Application';
+    return 'Next Step';
   };
 
   return (
@@ -101,6 +122,7 @@ export default function MainLayout() {
           <div className="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 shadow-sm">
             {step === 1 && <Step1LoanDetails />}
             {step === 2 && <Step2PersonalInfo />}
+            {step === 3 && <Step3KYC />}
           </div>
         </main>
       </div>
@@ -118,10 +140,11 @@ export default function MainLayout() {
 
         <button
           type="submit"
-          form={step === 1 ? 'step1-form' : 'step2-form'}
-          className="flex items-center gap-2 px-5 py-2 bg-[#00375e] text-white rounded-lg text-sm font-medium hover:bg-[#1f4e79] transition-all shadow-sm"
+          form={getFormId()}
+          disabled={isNextDisabled()}
+          className="flex items-center gap-2 px-5 py-2 bg-[#00375e] text-white rounded-lg text-sm font-medium hover:bg-[#1f4e79] transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {step === 2 ? 'Submit Application' : 'Next Step'}
+          {getSubmitText()}
         </button>
       </footer>
     </div>
