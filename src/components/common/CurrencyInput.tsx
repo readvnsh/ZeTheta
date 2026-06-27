@@ -8,14 +8,16 @@ export interface CurrencyInputProps extends Omit<React.InputHTMLAttributes<HTMLI
 }
 
 export const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputProps>(
-  ({ value, defaultValue, onChange, hasError, className = '', ...props }, ref) => {
-    const [displayValue, setDisplayValue] = useState<string>('');
-    const [internalValue, setInternalValue] = useState<number | undefined>(defaultValue);
-
+  ({
+    value, defaultValue, onChange, hasError, className = '', ...props
+  }, ref) => {
     const formatINR = (val: number | undefined) => {
-      if (val === undefined || isNaN(val)) return '';
+      if (val === undefined || Number.isNaN(val)) return '';
       return new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 }).format(val);
     };
+
+    const [displayValue, setDisplayValue] = useState<string>(formatINR(defaultValue));
+    const [internalValue, setInternalValue] = useState<number | undefined>(defaultValue);
 
     useEffect(() => {
       if (value !== undefined) {
@@ -51,6 +53,6 @@ export const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputPro
         {...props}
       />
     );
-  }
+  },
 );
 CurrencyInput.displayName = 'CurrencyInput';
