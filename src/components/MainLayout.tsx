@@ -2,6 +2,7 @@ import useFormStore from '../store/formStore';
 import Step1LoanDetails from './Step1LoanDetails';
 import Step2PersonalInfo from './Step2PersonalInfo';
 import Step3KYC from './Step3KYC';
+import Step4Address from './Step4Address';
 
 export default function MainLayout() {
   const {
@@ -18,14 +19,15 @@ export default function MainLayout() {
     { num: 1, label: 'Loan Details', icon: 'payments' },
     { num: 2, label: 'Personal Info', icon: 'person' },
     { num: 3, label: 'KYC & Verification', icon: 'security' },
+    { num: 4, label: 'Address Info', icon: 'home' },
     {
-      num: 4, label: 'Co-Applicant', icon: 'group', disabled: true,
+      num: 5, label: 'Co-Applicant', icon: 'group', disabled: true,
     },
     {
-      num: 5, label: 'Documents', icon: 'description', disabled: true,
+      num: 6, label: 'Documents', icon: 'description', disabled: true,
     },
     {
-      num: 6, label: 'Review & Submit', icon: 'send', disabled: true,
+      num: 7, label: 'Review & Submit', icon: 'send', disabled: true,
     },
   ];
 
@@ -59,12 +61,12 @@ export default function MainLayout() {
   const getFormId = () => {
     if (step === 1) return 'step1-form';
     if (step === 2) return 'step2-form';
-    return 'step3-form';
+    if (step === 3) return 'step3-form';
+    return 'step4-form';
   };
 
   const getSubmitText = () => {
-    if (step === 3) return 'Proceed';
-    if (step === 2) return 'Submit Application';
+    if (step === 4) return 'Proceed';
     return 'Next Step';
   };
 
@@ -123,6 +125,7 @@ export default function MainLayout() {
             {step === 1 && <Step1LoanDetails />}
             {step === 2 && <Step2PersonalInfo />}
             {step === 3 && <Step3KYC />}
+            {step === 4 && <Step4Address />}
           </div>
         </main>
       </div>
