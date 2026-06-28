@@ -162,4 +162,8 @@ const useFormStore = create<FormState>((set, get) => ({
   }),
 }));
 
+if (typeof window !== 'undefined' && (window as any).Cypress) {
+  (window as any).store = useFormStore;
+}
+
 export default useFormStore;
