@@ -72,7 +72,7 @@ export default function Step7Documents() {
   };
 
   return (
-    <form id="step7-form" onSubmit={handleSubmit(onSubmit, (err) => console.log('STEP7 FORM ERRORS:', err))} className="space-y-6">
+    <form id="step7-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="space-y-1">
         <h2 className="text-xl font-bold text-[#00375e] tracking-tight">Documents & Signature</h2>
         <p className="text-sm text-gray-500">Upload your verified identity documents and draw your e-signature below.</p>

@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
 import { useRef } from 'react';
 import SignatureCanvas from 'react-signature-canvas';
 
@@ -14,7 +15,8 @@ export default function SignaturePad({
 }: SignaturePadProps) {
   const sigCanvasRef = useRef<SignatureCanvas>(null);
 
-  const handleClear = () => {
+  const handleClear = (e: React.MouseEvent) => {
+    e.stopPropagation();
     sigCanvasRef.current?.clear();
     onChange(null);
   };
