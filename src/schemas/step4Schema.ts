@@ -45,7 +45,7 @@ export const step4Schema = z
         if (!a1 && !pc && !ci && !st) return undefined;
         return val;
       },
-      addressBaseSchema.optional()
+      addressBaseSchema.optional(),
     ),
     previousAddress: z.preprocess(
       (val) => {
@@ -58,7 +58,7 @@ export const step4Schema = z
         if (!a1 && !pc && !ci && !st) return undefined;
         return val;
       },
-      addressBaseSchema.optional()
+      addressBaseSchema.optional(),
     ),
   })
   .superRefine((data, ctx) => {

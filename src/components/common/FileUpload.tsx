@@ -23,8 +23,30 @@ export default function FileUpload({
 }: FileUploadProps) {
   const [originalSize, setOriginalSize] = useState<number | null>(null);
   const [isCompressing, setIsCompressing] = useState(false);
+  const [localError, setLocalError] = useState<string | null>(null);
 
-  const onDrop = async (acceptedFiles: File[]) => {
+  const formatSize = (bytes: number) => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  };
+
+  const onDrop = async (acceptedFiles: File[], fileRejections: any[]) => {
+    setLocalError(null);
+
+    if (fileRejections && fileRejections.length > 0) {
+      const error = fileRejections[0].errors[0];
+      if (error.code === 'file-invalid-type') {
+        setLocalError('File type not supported. Please upload allowed formats.');
+      } else if (error.code === 'file-too-large') {
+        setLocalError(`File exceeds the limit of ${formatSize(maxSizeInBytes)}.`);
+      } else {
+        setLocalError(error.message);
+      }
+      onFileSelect(null);
+      return;
+    }
+
     if (acceptedFiles.length === 0) return;
     const file = acceptedFiles[0];
     setOriginalSize(file.size);
@@ -55,12 +77,6 @@ export default function FileUpload({
     maxSize: maxSizeInBytes,
     multiple: false,
   });
-
-  const formatSize = (bytes: number) => {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-  };
 
   return (
     <div className="space-y-1">
@@ -143,6 +159,9 @@ export default function FileUpload({
             </>
           )}
         </div>
+      )}
+      {localError && (
+        <p className="text-xs text-red-600 mt-1 font-medium">{localError}</p>
       )}
     </div>
   );
