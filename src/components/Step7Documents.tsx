@@ -72,11 +72,18 @@ export default function Step7Documents() {
   };
 
   return (
-    <form id="step7-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form id="step7-form" onSubmit={handleSubmit(onSubmit, (err) => console.log('STEP7 FORM ERRORS:', err))} className="space-y-6">
       <div className="space-y-1">
         <h2 className="text-xl font-bold text-[#00375e] tracking-tight">Documents & Signature</h2>
         <p className="text-sm text-gray-500">Upload your verified identity documents and draw your e-signature below.</p>
       </div>
+
+      {Object.keys(errors).length > 0 && (
+        <div id="step7-validation-errors" className="p-4 bg-red-50 text-red-800 rounded-lg text-xs font-mono whitespace-pre-wrap">
+          <p className="font-bold mb-1">Validation Errors:</p>
+          {JSON.stringify(errors, (k, v) => (k === 'ref' ? undefined : v), 2)}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* PAN Card */}

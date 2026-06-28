@@ -17,6 +17,7 @@ export default function Step3KYC() {
     setAadhaarVerified,
     isPanVerified,
     isAadhaarVerified,
+    setStep,
   } = useFormStore();
 
   const loanType = step1Data?.loanType ?? 'Personal';
@@ -74,10 +75,7 @@ export default function Step3KYC() {
 
   const onSubmit = (data: Step3FormData) => {
     setStep3Data(data);
-    // eslint-disable-next-line no-console
-    console.log('Step 3 KYC Complete! Data saved:', data);
-    // eslint-disable-next-line no-console
-    console.log('KYC Steps Verified and Form Submitted successfully!');
+    setStep(4);
   };
 
   return (

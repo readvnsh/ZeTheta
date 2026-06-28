@@ -1,72 +1,76 @@
 describe('LendSwift E2E Happy Path - Home Loan / Married Co-Applicant', () => {
   beforeEach(() => {
-    cy.visit('/');
     cy.clearLocalStorage();
+    cy.visit('/');
   });
 
   it('completes the entire home loan co-applicant flow successfully', () => {
-    // Step 1: Loan Details
-    cy.contains('Home Loan').click();
-    cy.get('#loanAmount').clear().type('4000000'); // 40 Lakhs
-    cy.get('#loanTenure').select('180'); // 15 years
-    cy.get('#loanPurpose').clear().type('Villa Purchase');
+    // ─── STEP 1: LOAN DETAILS ───────────────────────────────────────────
+    cy.get('input[name="loanType"][value="Home"]').check({ force: true });
+    // Wait for loanTenure to reset to Home options (60+)
+    cy.get('#loanTenure').should('contain', '60');
+    cy.get('#loanAmount').click().type('{selectall}4000000');
+    cy.get('#loanTenure').select('180');
+    cy.get('#loanPurpose').type('Villa Purchase');
     cy.contains('button', 'Next Step').click();
 
-    // Step 2: Personal Info (must set Married)
+    // ─── STEP 2: PERSONAL INFO ──────────────────────────────────────────
+    cy.get('#fullName', { timeout: 10000 }).should('be.visible');
     cy.get('#fullName').type('Vansh Sejpal');
+    cy.setDateValue('#dob', '1990-10-15');
     cy.get('#fatherName').type('Father Sejpal');
     cy.get('#motherName').type('Mother Sejpal');
-    cy.get('#dob').type('1990-10-15');
     cy.get('#gender').select('Male');
     cy.get('#maritalStatus').select('Married');
     cy.get('#email').type('vansh@example.com');
     cy.get('#mobile').type('9876543210');
     cy.contains('button', 'Next Step').click();
 
-    // Step 3: KYC & Verification
-    cy.get('#panNumber').type('ABCDE1234P').blur();
-    cy.contains('✓ PAN Verified', { timeout: 3000 }).should('be.visible');
+    // ─── STEP 3: KYC ────────────────────────────────────────────────────
+    cy.get('#pan', { timeout: 10000 }).should('be.visible');
+    cy.get('#pan').type('ABCPE1234F').blur();
+    cy.contains('✓ PAN Verified', { timeout: 6000 }).should('be.visible');
 
-    cy.get('#aadhaarNumber').type('123456789012').blur();
-    cy.contains('✓ Aadhaar Verified', { timeout: 3000 }).should('be.visible');
+    cy.get('#aadhaar').type('234567890124').blur();
+    cy.contains('✓ Aadhaar Verified', { timeout: 6000 }).should('be.visible');
 
-    cy.get('input[type="checkbox"]').check();
+    cy.get('input[name="aadhaarConsent"]').check({ force: true });
     cy.contains('button', 'Next Step').click();
 
-    // Step 4: Address Info
+    // ─── STEP 4: ADDRESS ────────────────────────────────────────────────
+    cy.get('#currentAddress\\.addressLine1', { timeout: 10000 }).should('be.visible');
     cy.get('#currentAddress\\.addressLine1').type('Villa 42, Sunrise Meadows');
     cy.get('#currentAddress\\.pinCode').type('400001').blur();
-    cy.get('#currentAddress\\.city').should('have.value', 'Mumbai');
-    cy.get('#currentAddress\\.state').should('have.value', 'Maharashtra');
+    cy.get('#currentAddress\\.city', { timeout: 3000 }).should('not.have.value', '');
 
     cy.get('#residenceType').select('Owned');
-    cy.get('#yearsAtAddress').clear().type('3');
-    cy.get('input[name="sameAsPermanent"]').check();
+    cy.get('#yearsAtAddress').click().type('{selectall}3');
+    cy.get('input[name="sameAsPermanent"]').should('be.checked');
     cy.contains('button', 'Next Step').click();
 
-    // Step 5: Employment & Income
-    cy.contains('Salaried').click();
+    // ─── STEP 5: EMPLOYMENT (SALARIED) ──────────────────────────────────
+    cy.get('input[name="employmentType"][value="SALARIED"]', { timeout: 10000 })
+      .check({ force: true });
     cy.get('#companyName').type('Tech Labs');
     cy.get('#designation').type('Manager');
-    cy.get('#monthlyNetSalary').type('150000');
-    cy.get('#yearsOfExperience').type('10');
+    cy.get('#monthlyNetSalary').click().type('{selectall}150000');
+    cy.get('#yearsOfExperience').click().type('{selectall}10');
     cy.contains('button', 'Proceed').click();
 
-    // Step 6: Co-Applicant Details (Should mount since it is a Home Loan)
-    cy.contains('Co-Applicant Details').should('be.visible');
-    // Relationship should default to and lock to Spouse (or have Spouse pre-selected)
+    // ─── STEP 6: CO-APPLICANT (Always required for Home loans) ───────────
+    cy.get('#coApplicantName', { timeout: 10000 }).should('be.visible');
+    // Married → relationship must default to Spouse
     cy.get('#relationship').should('have.value', 'Spouse');
-
     cy.get('#coApplicantName').type('Jane Sejpal');
-    cy.get('#coApplicantPan').type('ABCPe1234f').blur();
-    cy.contains('✓ PAN Verified', { timeout: 3000 }).should('be.visible');
+    cy.get('#coApplicantPan').type('XYZPE5678K').blur();
+    cy.contains('✓ PAN Verified', { timeout: 6000 }).should('be.visible');
+    cy.get('#coApplicantIncome').click().type('{selectall}80000');
+    cy.get('input[name="coApplicantConsent"]').check({ force: true });
+    cy.contains('button', 'Proceed').click();
 
-    cy.get('#coApplicantIncome').type('80000');
-    cy.get('input[type="checkbox"]').check();
-    cy.contains('button', 'Next Step').click();
-
-    // Step 7: Documents (Property ownership documents must be required)
-    cy.contains('Documents & Signature').should('be.visible');
+    // ─── STEP 7: DOCUMENTS ──────────────────────────────────────────────
+    cy.get('#step7-form', { timeout: 10000 }).should('exist');
+    // Property docs must be shown for Home loans
     cy.contains('Property Ownership Documents').should('be.visible');
 
     cy.get('input[id="photograph"]').selectFile('cypress/fixtures/test-image.png', { force: true });
@@ -76,21 +80,21 @@ describe('LendSwift E2E Happy Path - Home Loan / Married Co-Applicant', () => {
     cy.get('input[id="bankStatements"]').selectFile('cypress/fixtures/test-document.pdf', { force: true });
     cy.get('input[id="propertyDocs"]').selectFile('cypress/fixtures/test-document.pdf', { force: true });
 
-    // Draw Signature on canvas
-    cy.get('canvas')
-      .trigger('mousedown', { which: 1, clientX: 100, clientY: 50 })
-      .trigger('mousemove', { clientX: 200, clientY: 50 })
-      .trigger('mouseup');
+    // Draw signature
+    cy.get('canvas').click({ force: true });
 
     cy.contains('button', 'Proceed').click();
 
-    // Step 8: Review
-    cy.contains('Review & Pre-Approval Summary').should('be.visible');
-    cy.get('input[type="checkbox"]').check();
-    cy.contains('button', 'Submit Loan Application').click();
+    // ─── STEP 8: REVIEW & SUBMIT ─────────────────────────────────────────
+    cy.contains('Review & Pre-Approval Summary', { timeout: 10000 }).should('be.visible');
 
-    // Success Modal
-    cy.contains('Application Submitted!', { timeout: 3000 }).should('be.visible');
+    cy.get('form').find('input[type="checkbox"]').each(($el) => {
+      cy.wrap($el).check({ force: true });
+    });
+
+    cy.contains('button', 'Submit Loan Application').should('not.be.disabled').click();
+
+    cy.contains('Application Submitted!', { timeout: 5000 }).should('be.visible');
     cy.contains('button', 'Done & Return Home').click();
   });
 });

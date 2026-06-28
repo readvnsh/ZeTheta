@@ -7,7 +7,7 @@ import { Input, Select } from './common';
 
 export default function Step2PersonalInfo() {
   const {
-    step1Data, step2Data, setStep2Data, setSpouseFieldsRequired,
+    step1Data, step2Data, setStep2Data, setSpouseFieldsRequired, setStep,
   } = useFormStore();
 
   const tenureMonths = step1Data?.loanTenure ?? 12; // default to 12 if step1 not filled
@@ -42,10 +42,7 @@ export default function Step2PersonalInfo() {
 
   const onSubmit = (data: Step2FormData) => {
     setStep2Data(data);
-    // Move to next step or handle final submit (Step 3 or complete)
-    // For now, since we only implement Steps 1 and 2, we can log it or display a success message.
-    // eslint-disable-next-line no-console
-    console.log('Form Step 1 and Step 2 Submitted Successfully!', { step1Data, step2Data: data });
+    setStep(3);
   };
 
   return (

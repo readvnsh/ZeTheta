@@ -34,8 +34,32 @@ export const step4Schema = z
       .or(z.literal(''))
       .transform((val) => (val === '' || val === undefined ? undefined : Number(val))),
     sameAsPermanent: z.boolean(),
-    permanentAddress: addressBaseSchema.optional(),
-    previousAddress: addressBaseSchema.optional(),
+    permanentAddress: z.preprocess(
+      (val) => {
+        if (!val || typeof val !== 'object') return undefined;
+        const obj = val as Record<string, unknown>;
+        const a1 = typeof obj.addressLine1 === 'string' ? obj.addressLine1.trim() : '';
+        const pc = typeof obj.pinCode === 'string' ? obj.pinCode.trim() : '';
+        const ci = typeof obj.city === 'string' ? obj.city.trim() : '';
+        const st = typeof obj.state === 'string' ? obj.state.trim() : '';
+        if (!a1 && !pc && !ci && !st) return undefined;
+        return val;
+      },
+      addressBaseSchema.optional()
+    ),
+    previousAddress: z.preprocess(
+      (val) => {
+        if (!val || typeof val !== 'object') return undefined;
+        const obj = val as Record<string, unknown>;
+        const a1 = typeof obj.addressLine1 === 'string' ? obj.addressLine1.trim() : '';
+        const pc = typeof obj.pinCode === 'string' ? obj.pinCode.trim() : '';
+        const ci = typeof obj.city === 'string' ? obj.city.trim() : '';
+        const st = typeof obj.state === 'string' ? obj.state.trim() : '';
+        if (!a1 && !pc && !ci && !st) return undefined;
+        return val;
+      },
+      addressBaseSchema.optional()
+    ),
   })
   .superRefine((data, ctx) => {
     // 1. Rent validation
