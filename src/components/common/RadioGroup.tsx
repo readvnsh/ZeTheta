@@ -1,6 +1,6 @@
 import React from 'react';
 
-export interface RadioGroupProps extends React.FieldsetHTMLAttributes<HTMLFieldSetElement> {
+export interface RadioGroupProps extends Omit<React.FieldsetHTMLAttributes<HTMLFieldSetElement>, 'onChange'> {
   options: { label: string; value: string }[];
   name: string;
   orientation?: 'vertical' | 'horizontal';

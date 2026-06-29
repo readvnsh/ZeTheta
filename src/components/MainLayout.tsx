@@ -119,8 +119,8 @@ export default function MainLayout() {
                   <li key={s.num}>
                     <button
                       type="button"
-                      disabled={!(s.disabled || isCompleted)}
-                      onClick={() => !s.disabled && isCompleted && setStep(s.num)}
+                      disabled={!isCompleted}
+                      onClick={() => isCompleted && setStep(s.num)}
                       className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm transition-all ${getStepButtonClass(s.num)}`}
                     >
                       <span

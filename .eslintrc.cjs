@@ -8,10 +8,10 @@ module.exports = {
     'plugin:jsx-a11y/recommended',
     'plugin:react/jsx-runtime'
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs', 'vite.config.ts', 'tailwind.config.js', 'postcss.config.js', 'cypress.config.ts', 'cypress'],
+  ignorePatterns: ['dist', '.eslintrc.cjs', 'vite.config.ts', 'tailwind.config.js', 'postcss.config.js', 'cypress.config.ts', 'cypress', 'src/**/*.test.ts', 'src/**/*.test.tsx'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: './tsconfig.app.json'
+    project: ['./tsconfig.app.json', './tsconfig.test.json']
   },
   plugins: ['react-refresh', 'jsx-a11y'],
   rules: {

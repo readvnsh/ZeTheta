@@ -24,7 +24,7 @@ export default function Step4Address() {
     formState: { errors },
   } = useForm<Step4FormData>({
     resolver: zodResolver(step4Schema),
-    defaultValues: step4Data || {
+    defaultValues: (step4Data || {
       currentAddress: {
         addressLine1: '', addressLine2: '', pinCode: '', city: '', state: '',
       },
@@ -38,7 +38,7 @@ export default function Step4Address() {
       previousAddress: {
         addressLine1: '', addressLine2: '', pinCode: '', city: '', state: '',
       },
-    },
+    }) as Step4FormData,
   });
 
   const { lookup: lookupCurrent, isLoading: isCurrentLoading } = usePinCodeLookup();

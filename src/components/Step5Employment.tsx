@@ -33,7 +33,7 @@ export default function Step5Employment() {
     watch,
     setError,
     clearErrors,
-    formState: { errors },
+    formState: { errors: errorsRaw },
   } = useForm<Step5FormData>({
     resolver: zodResolver(generateSchema(5, useFormStore.getState())),
     defaultValues: step5Data || (loanType === 'Business' ? {
@@ -50,6 +50,9 @@ export default function Step5Employment() {
       yearsOfExperience: '' as any,
     }),
   });
+
+  // Cast to `any` to access discriminated-union sub-form fields without TS narrowing errors
+  const errors = errorsRaw as Record<string, { message?: string }>;
 
   const employmentTypeVal = watch('employmentType');
 

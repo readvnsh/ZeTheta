@@ -23,7 +23,7 @@ export default function usePinCodeLookup() {
     setError(null);
     setResult(null);
 
-    return new Promise((resolve) => {
+    return new Promise<{ city: string; state: string } | null>((resolve) => {
       setTimeout(() => {
         setIsLoading(false);
         const record = (pinCodeData as Record<string, PinCodeRecord>)[pin];

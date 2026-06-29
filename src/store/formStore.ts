@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import {
-  Step1FormData, Step2FormData, Step3Data, Step4FormData, Step5FormData, Step6FormData,
+  Step1FormData, Step2FormData, Step3FormData, Step4FormData, Step5FormData, Step6FormData,
 } from '../schemas';
 import { sanitizeData } from '../utils/sanitizer';
 import { validatePan } from '../utils/validators';
@@ -22,7 +22,7 @@ interface FormState {
   step: number;
   step1Data: Step1FormData | null;
   step2Data: Step2FormData | null;
-  step3Data: Step3Data | null;
+  step3Data: Step3FormData | null;
   step4Data: Step4FormData | null;
   step5Data: Step5FormData | null;
   step6Data: Step6FormData | null;
@@ -35,7 +35,7 @@ interface FormState {
   setStep: (step: number) => void;
   setStep1Data: (data: Step1FormData) => void;
   setStep2Data: (data: Step2FormData | null) => void;
-  setStep3Data: (data: Step3Data | null) => void;
+  setStep3Data: (data: Step3FormData | null) => void;
   setStep4Data: (data: Step4FormData | null) => void;
   setStep5Data: (data: Step5FormData | null) => void;
   setStep6Data: (data: Step6FormData | null) => void;
@@ -101,8 +101,8 @@ const useFormStore = create<FormState>((set, get) => ({
       const step3 = get().step3Data;
       let newStep3 = step3;
       let newPanVerified = get().isPanVerified;
-      if (step3 && step3.panNumber) {
-        const isStillValid = validatePan(step3.panNumber, sanitized.loanType);
+      if (step3 && step3.pan) {
+        const isStillValid = validatePan(step3.pan, sanitized.loanType);
         if (!isStillValid) {
           newStep3 = null;
           newPanVerified = false;

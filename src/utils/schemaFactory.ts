@@ -52,7 +52,7 @@ export const generateStep6Schema = (maritalStatus: string) => (
  * Mathematically validates that Age + Tenure <= 65.
  */
 export const generateStep8Schema = (formData: any) => (
-  step8Schema.superRefine((data, ctx) => {
+  step8Schema.superRefine((_data, ctx) => {
     const dob = formData.step2Data?.dob;
     const tenureMonths = formData.step1Data?.loanTenure;
 

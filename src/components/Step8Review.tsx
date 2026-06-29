@@ -249,7 +249,7 @@ export default function Step8Review() {
             <div className="grid grid-cols-2 gap-2 text-sm text-gray-600 break-all">
               <div>
                 PAN:
-                <strong className="text-gray-800">{step3Data?.panNumber || '-'}</strong>
+                <strong className="text-gray-800">{step3Data?.pan || '-'}</strong>
               </div>
               <div>
                 Status:
@@ -257,7 +257,7 @@ export default function Step8Review() {
               </div>
               <div>
                 Aadhaar:
-                <strong className="text-gray-800">{step3Data?.aadhaarNumber ? `XXXX-XXXX-${step3Data.aadhaarNumber.slice(-4)}` : '-'}</strong>
+                <strong className="text-gray-800">{step3Data?.aadhaar ? `XXXX-XXXX-${step3Data.aadhaar.slice(-4)}` : '-'}</strong>
               </div>
               <div>
                 Status:
