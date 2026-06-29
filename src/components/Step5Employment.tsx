@@ -83,7 +83,7 @@ export default function Step5Employment() {
 
       {/* Employment Type Radio */}
       <Input>
-        <Input.Label>Employment Type</Input.Label>
+        <span id="employment-type-label" className="text-sm font-medium text-gray-700">Employment Type</span>
         <Controller
           name="employmentType"
           control={control}
@@ -95,6 +95,7 @@ export default function Step5Employment() {
               value={field.value}
               onChange={field.onChange}
               className="mt-1"
+              aria-labelledby="employment-type-label"
             />
           )}
         />

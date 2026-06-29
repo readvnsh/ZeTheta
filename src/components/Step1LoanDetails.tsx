@@ -112,7 +112,7 @@ export default function Step1LoanDetails() {
 
       {/* Loan Type */}
       <Input>
-        <Input.Label>Loan Type</Input.Label>
+        <span id="loan-type-label" className="text-sm font-medium text-gray-700">Loan Type</span>
         <Controller
           name="loanType"
           control={control}
@@ -128,6 +128,7 @@ export default function Step1LoanDetails() {
               value={field.value}
               onChange={field.onChange}
               className="mt-1"
+              aria-labelledby="loan-type-label"
             />
           )}
         />

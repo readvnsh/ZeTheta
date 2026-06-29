@@ -80,7 +80,7 @@ export default function FileUpload({
 
   return (
     <div className="space-y-1">
-      <span className="text-sm font-medium text-gray-700">{label}</span>
+      <label htmlFor={id} className="text-sm font-medium text-gray-700 block">{label}</label>
       {value ? (
         <div className="flex items-center gap-4 p-3 border border-gray-200 rounded-xl bg-gray-50/50">
           {value.type.startsWith('image/') ? (
@@ -138,8 +138,8 @@ export default function FileUpload({
             ${hasError ? 'border-red-300 bg-red-50/10' : ''}
             ${isCompressing ? 'opacity-50 pointer-events-none' : ''}`}
         >
-          <input id={id} {...getInputProps()} />
-          <div className="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center text-gray-400">
+          <input id={id} aria-label={label} {...getInputProps()} />
+          <div className="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center text-gray-500">
             <span className="material-symbols-outlined text-2xl" data-icon="cloud_upload">cloud_upload</span>
           </div>
           {isCompressing ? (
@@ -151,7 +151,7 @@ export default function FileUpload({
                 {' '}
                 or drag and drop
               </div>
-              <div className="text-xs text-gray-400">
+              <div className="text-xs text-gray-500">
                 Max size:
                 {' '}
                 {formatSize(maxSizeInBytes)}

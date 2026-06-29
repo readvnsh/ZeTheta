@@ -57,22 +57,27 @@ export default function SignaturePad({
 
   return (
     <div className="space-y-1">
-      <span className="text-sm font-medium text-gray-700">Digital Signature</span>
-      <div
-        role="button"
-        tabIndex={0}
-        onClick={handleContainerClick}
-        onKeyDown={handleKeyDown}
-        className={`border-2 rounded-xl p-1 bg-white relative transition-all focus:outline-none focus:ring-2 focus:ring-blue-500
-          ${hasError ? 'border-red-300' : 'border-gray-200 hover:border-gray-300'}`}
-      >
-        <SignatureCanvas
-          ref={sigCanvasRef}
-          onEnd={handleEnd}
-          canvasProps={{
-            className: 'w-full h-44 cursor-crosshair rounded-lg bg-gray-50/50',
-          }}
-        />
+      {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+      <label htmlFor="signature-pad" className="text-sm font-medium text-gray-700 block">Digital Signature</label>
+      <div className="relative">
+        <div
+          id="signature-pad"
+          role="button"
+          tabIndex={0}
+          aria-label="Signature Drawing Area. Draw your signature here."
+          onClick={handleContainerClick}
+          onKeyDown={handleKeyDown}
+          className={`border-2 rounded-xl p-1 bg-white transition-all focus:outline-none focus:ring-2 focus:ring-blue-500
+            ${hasError ? 'border-red-300' : 'border-gray-200 hover:border-gray-300'}`}
+        >
+          <SignatureCanvas
+            ref={sigCanvasRef}
+            onEnd={handleEnd}
+            canvasProps={{
+              className: 'w-full h-44 cursor-crosshair rounded-lg bg-gray-50/50',
+            }}
+          />
+        </div>
         <button
           type="button"
           onClick={handleClear}
@@ -82,7 +87,7 @@ export default function SignaturePad({
         </button>
       </div>
       {value && (
-        <p className="text-xs text-green-600 font-medium">✓ Signature captured successfully</p>
+        <p className="text-xs text-green-700 font-medium">✓ Signature captured successfully</p>
       )}
     </div>
   );

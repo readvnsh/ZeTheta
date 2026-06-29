@@ -54,7 +54,7 @@ export default function MainLayout() {
     if (step > sNum) {
       return 'text-[#006d37] hover:bg-green-50/50 font-medium';
     }
-    return 'text-gray-400 cursor-not-allowed';
+    return 'text-gray-500 cursor-not-allowed';
   };
 
   const getStepNumberClass = (sNum: number) => {
@@ -64,7 +64,7 @@ export default function MainLayout() {
     if (step > sNum) {
       return 'bg-[#006d37] text-white';
     }
-    return 'bg-gray-100 text-gray-400';
+    return 'bg-gray-200 text-gray-600';
   };
 
   const isNextDisabled = () => {
@@ -96,10 +96,10 @@ export default function MainLayout() {
       {/* Top Header */}
       <header className="fixed top-0 left-0 w-full z-50 h-16 bg-white border-b border-gray-200 flex justify-between items-center px-6 shadow-sm">
         <div className="flex items-center gap-3">
-          <span className="text-xl font-extrabold text-[#00375e] tracking-tight">LendSwift</span>
+          <h1 className="text-xl font-extrabold text-[#00375e] tracking-tight">LendSwift</h1>
           <span className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full border border-blue-100 font-medium">Loan Portal</span>
         </div>
-        <div className="text-xs text-gray-400 font-mono">App ID: LS-48291</div>
+        <div className="text-xs text-gray-500 font-mono">App ID: LS-48291</div>
       </header>
 
       {/* Main Container */}
@@ -108,7 +108,7 @@ export default function MainLayout() {
         <nav className="fixed left-0 top-16 bottom-0 w-64 bg-white border-r border-gray-200 p-6 hidden md:flex flex-col justify-between overflow-y-auto">
           <div className="space-y-6">
             <div>
-              <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Application Steps</h2>
+              <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Application Steps</h2>
               <p className="text-xs text-gray-500 mt-1">Provide information to apply</p>
             </div>
             <ul className="space-y-3">
@@ -136,7 +136,7 @@ export default function MainLayout() {
             </ul>
           </div>
           <div className="pt-4 border-t border-gray-100">
-            <p className="text-xs text-gray-400">&copy; 2026 LendSwift Inc.</p>
+            <p className="text-xs text-gray-500">&copy; 2026 LendSwift Inc.</p>
           </div>
         </nav>
 
@@ -167,7 +167,7 @@ export default function MainLayout() {
           type="button"
           onClick={handleBack}
           disabled={step === 1}
-          className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          className="flex items-center gap-2 px-4 h-11 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 disabled:border-gray-200 disabled:cursor-not-allowed transition-all"
         >
           Back
         </button>
@@ -177,7 +177,7 @@ export default function MainLayout() {
             type="submit"
             form={getFormId()}
             disabled={isNextDisabled()}
-            className="flex items-center gap-2 px-5 py-2 bg-[#00375e] text-white rounded-lg text-sm font-medium hover:bg-[#1f4e79] transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-5 h-11 bg-[#00375e] text-white rounded-lg text-sm font-medium hover:bg-[#1f4e79] disabled:bg-gray-100 disabled:text-gray-600 disabled:cursor-not-allowed transition-all shadow-sm"
           >
             {getSubmitText()}
           </button>

@@ -165,6 +165,7 @@ export default function Step8Review() {
                 type="button"
                 onClick={() => setStep(1)}
                 className="text-xs text-blue-600 font-semibold hover:underline"
+                aria-label="Edit Loan Details"
               >
                 Edit
               </button>
@@ -204,6 +205,7 @@ export default function Step8Review() {
                 type="button"
                 onClick={() => setStep(2)}
                 className="text-xs text-blue-600 font-semibold hover:underline"
+                aria-label="Edit Personal Information"
               >
                 Edit
               </button>
@@ -239,6 +241,7 @@ export default function Step8Review() {
                 type="button"
                 onClick={() => setStep(3)}
                 className="text-xs text-blue-600 font-semibold hover:underline"
+                aria-label="Edit KYC and Verification"
               >
                 Edit
               </button>
@@ -250,7 +253,7 @@ export default function Step8Review() {
               </div>
               <div>
                 Status:
-                <span className="text-green-600 font-bold">{isPanVerified ? '✓ Verified' : 'Unverified'}</span>
+                <span className="text-green-700 font-bold">{isPanVerified ? '✓ Verified' : 'Unverified'}</span>
               </div>
               <div>
                 Aadhaar:
@@ -258,7 +261,7 @@ export default function Step8Review() {
               </div>
               <div>
                 Status:
-                <span className="text-green-600 font-bold">{isAadhaarVerified ? '✓ Verified' : 'Unverified'}</span>
+                <span className="text-green-700 font-bold">{isAadhaarVerified ? '✓ Verified' : 'Unverified'}</span>
               </div>
             </div>
           </div>
@@ -274,6 +277,7 @@ export default function Step8Review() {
                 type="button"
                 onClick={() => setStep(4)}
                 className="text-xs text-blue-600 font-semibold hover:underline"
+                aria-label="Edit Address Details"
               >
                 Edit
               </button>
@@ -310,6 +314,7 @@ export default function Step8Review() {
                 type="button"
                 onClick={() => setStep(5)}
                 className="text-xs text-blue-600 font-semibold hover:underline"
+                aria-label="Edit Employment and Income Details"
               >
                 Edit
               </button>
@@ -338,6 +343,7 @@ export default function Step8Review() {
                   type="button"
                   onClick={() => setStep(6)}
                   className="text-xs text-blue-600 font-semibold hover:underline"
+                  aria-label="Edit Co-Applicant Details"
                 >
                   Edit
                 </button>
@@ -366,6 +372,7 @@ export default function Step8Review() {
                 type="button"
                 onClick={() => setStep(7)}
                 className="text-xs text-blue-600 font-semibold hover:underline"
+                aria-label="Edit Uploaded Documents and Signature"
               >
                 Edit
               </button>
@@ -374,16 +381,16 @@ export default function Step8Review() {
               <div className="grid grid-cols-2 gap-1 text-xs">
                 <div>
                   Photograph:
-                  <span className="text-green-600 font-bold">✓ Attached</span>
+                  <span className="text-green-700 font-bold">✓ Attached</span>
                 </div>
                 <div>
                   Aadhaar:
-                  <span className="text-green-600 font-bold">✓ Attached</span>
+                  <span className="text-green-700 font-bold">✓ Attached</span>
                 </div>
               </div>
               {step7Data?.signature && (
                 <div className="pt-2">
-                  <span className="text-xs text-gray-400 block mb-1">Captured Signature Preview:</span>
+                  <span className="text-xs text-gray-500 block mb-1">Captured Signature Preview:</span>
                   <img
                     src={step7Data.signature}
                     alt="Signature"
@@ -462,7 +469,7 @@ export default function Step8Review() {
 
           {/* Consents & Submission Form */}
           <form id="step8-form" onSubmit={handleSubmit} className="space-y-4">
-            <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Declaration & Consents</h4>
+            <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Declaration & Consents</h4>
             <div className="space-y-3">
               <Checkbox
                 name="consent1"
@@ -503,7 +510,7 @@ export default function Step8Review() {
             <button
               type="submit"
               disabled={isSubmitDisabled}
-              className="w-full h-12 mt-4 bg-[#00375e] text-white rounded-xl font-semibold hover:bg-[#1f4e79] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md flex items-center justify-center gap-2"
+              className="w-full h-12 mt-4 bg-[#00375e] text-white rounded-xl font-semibold hover:bg-[#1f4e79] disabled:bg-gray-100 disabled:text-gray-600 disabled:cursor-not-allowed transition-all shadow-md flex items-center justify-center gap-2"
             >
               {isSubmitting ? (
                 <>
@@ -538,7 +545,7 @@ export default function Step8Review() {
 
             {/* Reference ID Badge */}
             <div className="p-4 bg-gray-50 rounded-xl border border-gray-200 inline-block w-full">
-              <span className="text-xs text-gray-400 uppercase tracking-wider block font-bold">Application Reference ID</span>
+              <span className="text-xs text-gray-500 uppercase tracking-wider block font-bold">Application Reference ID</span>
               <strong className="text-gray-800 text-base font-mono block break-all mt-1">{submittedRefId}</strong>
             </div>
 
