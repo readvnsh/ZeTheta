@@ -68,11 +68,16 @@ describe('LendSwift E2E Happy Path - Business Loan / Business Owner', () => {
     cy.contains('ITR').should('be.visible');
 
     cy.get('input[id="photograph"]').selectFile('cypress/fixtures/test-image.png', { force: true });
+    cy.contains('test-image.png').should('be.visible'); // Wait for image compression to complete
+
     cy.get('input[id="aadhaarFront"]').selectFile('cypress/fixtures/test-document.pdf', { force: true });
     cy.get('input[id="aadhaarBack"]').selectFile('cypress/fixtures/test-document.pdf', { force: true });
     cy.get('input[id="bankStatements"]').selectFile('cypress/fixtures/test-document.pdf', { force: true });
     cy.get('input[id="itr"]').selectFile('cypress/fixtures/test-document.pdf', { force: true });
     cy.get('input[id="businessReg"]').selectFile('cypress/fixtures/test-document.pdf', { force: true });
+
+    // Wait for all 5 PDF uploads to be complete and visible
+    cy.get('p:contains("test-document.pdf")').should('have.length', 5);
 
     // Draw signature
     cy.get('canvas').click({ force: true });

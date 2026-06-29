@@ -103,6 +103,13 @@ export default function Step1LoanDetails() {
         <p className="text-sm text-gray-500">Specify your desired loan configurations.</p>
       </div>
 
+      {Object.keys(errors).length > 0 && (
+        <div id="step1-validation-errors" className="p-4 bg-red-50 text-red-800 rounded-lg text-xs font-mono whitespace-pre-wrap">
+          <p className="font-bold mb-1">Validation Errors:</p>
+          {JSON.stringify(errors, (k, v) => (k === 'ref' ? undefined : v), 2)}
+        </div>
+      )}
+
       {/* Loan Type */}
       <Input>
         <Input.Label>Loan Type</Input.Label>

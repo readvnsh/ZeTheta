@@ -65,11 +65,16 @@ describe('LendSwift E2E - Signature Canvas Lifecycle & Persistence', () => {
 
     // Fill all required files first to isolate signature validation
     cy.get('input[id="photograph"]').selectFile('cypress/fixtures/test-image.png', { force: true });
+    cy.contains('test-image.png').should('be.visible'); // Wait for image compression to complete
+
     cy.get('input[id="aadhaarFront"]').selectFile('cypress/fixtures/test-document.pdf', { force: true });
     cy.get('input[id="aadhaarBack"]').selectFile('cypress/fixtures/test-document.pdf', { force: true });
     cy.get('input[id="salarySlips"]').selectFile('cypress/fixtures/test-document.pdf', { force: true });
     cy.get('input[id="bankStatements"]').selectFile('cypress/fixtures/test-document.pdf', { force: true });
     cy.get('input[id="propertyDocs"]').selectFile('cypress/fixtures/test-document.pdf', { force: true });
+
+    // Wait for all 5 PDF uploads to be complete and visible
+    cy.get('p:contains("test-document.pdf")').should('have.length', 5);
 
     // 1. Submit without signature interaction
     cy.contains('button', 'Proceed').click();

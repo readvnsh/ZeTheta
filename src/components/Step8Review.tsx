@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import useFormStore from '../store/formStore';
 import { calculateAmortization, formatINR } from '../utils/emiCalculator';
 import { Checkbox } from './common';
@@ -36,6 +36,7 @@ export default function Step8Review() {
   // Submission state
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedRefId, setSubmittedRefId] = useState<string | null>(null);
+  const isSubmittingRef = useRef(false);
 
   // 1. Calculate Amortization
   const amort = calculateAmortization(principal, tenure, loanType);
@@ -81,7 +82,18 @@ export default function Step8Review() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isSubmitDisabled) return;
+    const formEl = e.currentTarget as HTMLFormElement;
+    if (formEl.getAttribute('data-submitting') === 'true') {
+      return;
+    }
+    formEl.setAttribute('data-submitting', 'true');
+    (window as any).globalIsSubmitting = true;
+
+    // Synchronously disable the submit button in the DOM
+    const submitBtn = formEl.querySelector('button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.setAttribute('disabled', 'true');
+    }
 
     // Validate consents & Age + Tenure using dynamic schemaFactory
     const schema = generateSchema(8, store);
@@ -94,15 +106,22 @@ export default function Step8Review() {
     if (!parse.success) {
       const errorMsg = parse.error.errors[0]?.message || 'Validation failed';
       setAgeTenureError(errorMsg);
+      formEl.removeAttribute('data-submitting');
+      (window as any).globalIsSubmitting = false;
+      if (submitBtn) {
+        submitBtn.removeAttribute('disabled');
+      }
       return;
     }
     setAgeTenureError(null);
 
+    isSubmittingRef.current = true;
     setIsSubmitting(true);
     // Simulate mock API delay
     await new Promise((resolve) => { setTimeout(resolve, 1500); });
 
     try {
+      (window as any).appSubmissionCount = ((window as any).appSubmissionCount || 0) + 1;
       const refId = crypto.randomUUID();
       // Wipe localStorage draft
       localStorage.removeItem(`lendswift_draft_${loanType}`);
@@ -114,6 +133,9 @@ export default function Step8Review() {
       setSubmittedRefId(fallbackId);
     } finally {
       setIsSubmitting(false);
+      isSubmittingRef.current = false;
+      formEl.removeAttribute('data-submitting');
+      (window as any).globalIsSubmitting = false;
     }
   };
 
@@ -147,7 +169,7 @@ export default function Step8Review() {
                 Edit
               </button>
             </div>
-            <div className="grid grid-cols-2 gap-2 text-sm text-gray-600">
+            <div className="grid grid-cols-2 gap-2 text-sm text-gray-600 break-all">
               <div>
                 Type:
                 <strong className="text-gray-800">{loanType}</strong>
@@ -186,7 +208,7 @@ export default function Step8Review() {
                 Edit
               </button>
             </div>
-            <div className="grid grid-cols-2 gap-2 text-sm text-gray-600">
+            <div className="grid grid-cols-2 gap-2 text-sm text-gray-600 break-all">
               <div className="col-span-2">
                 Name:
                 <strong className="text-gray-800">{step2Data?.fullName || '-'}</strong>
@@ -221,7 +243,7 @@ export default function Step8Review() {
                 Edit
               </button>
             </div>
-            <div className="grid grid-cols-2 gap-2 text-sm text-gray-600">
+            <div className="grid grid-cols-2 gap-2 text-sm text-gray-600 break-all">
               <div>
                 PAN:
                 <strong className="text-gray-800">{step3Data?.panNumber || '-'}</strong>
@@ -256,7 +278,7 @@ export default function Step8Review() {
                 Edit
               </button>
             </div>
-            <div className="text-sm text-gray-600 space-y-1">
+            <div className="text-sm text-gray-600 space-y-1 break-all">
               <div>
                 Current:
                 <strong className="text-gray-800">
@@ -292,7 +314,7 @@ export default function Step8Review() {
                 Edit
               </button>
             </div>
-            <div className="grid grid-cols-2 gap-2 text-sm text-gray-600">
+            <div className="grid grid-cols-2 gap-2 text-sm text-gray-600 break-all">
               <div>
                 Profile:
                 <strong className="text-gray-800">{step5Data?.employmentType || '-'}</strong>
@@ -320,7 +342,7 @@ export default function Step8Review() {
                   Edit
                 </button>
               </div>
-              <div className="grid grid-cols-2 gap-2 text-sm text-gray-600">
+              <div className="grid grid-cols-2 gap-2 text-sm text-gray-600 break-all">
                 <div>
                   Name:
                   <strong className="text-gray-800">{step6Data.coApplicantName}</strong>
@@ -439,28 +461,32 @@ export default function Step8Review() {
           )}
 
           {/* Consents & Submission Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form id="step8-form" onSubmit={handleSubmit} className="space-y-4">
             <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Declaration & Consents</h4>
             <div className="space-y-3">
               <Checkbox
+                name="consent1"
                 label="I confirm that all information provided in this application is accurate and true."
                 hasError={false}
                 checked={consent1}
                 onChange={(e) => setConsent1(e.target.checked)}
               />
               <Checkbox
+                name="consent2"
                 label="I authorize LendSwift to retrieve my credit score from CIBIL/Equifax."
                 hasError={false}
                 checked={consent2}
                 onChange={(e) => setConsent2(e.target.checked)}
               />
               <Checkbox
+                name="consent3"
                 label="I agree to the Terms & Conditions and Privacy Policy."
                 hasError={false}
                 checked={consent3}
                 onChange={(e) => setConsent3(e.target.checked)}
               />
               <Checkbox
+                name="consent4"
                 label="I consent to receive communication regarding my loan status via SMS/Email."
                 hasError={false}
                 checked={consent4}

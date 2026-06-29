@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import {
   Step1FormData, Step2FormData, Step3Data, Step4FormData, Step5FormData, Step6FormData,
 } from '../schemas';
+import { sanitizeData } from '../utils/sanitizer';
+import { validatePan } from '../utils/validators';
 
 export interface Step7StoreData {
   panCard?: { name: string; size: number } | null;
@@ -47,6 +49,8 @@ interface FormState {
   resetForm: () => void;
 }
 
+let lastStepChange = 0;
+
 const useFormStore = create<FormState>((set, get) => ({
   step: 1,
   step1Data: null,
@@ -61,10 +65,22 @@ const useFormStore = create<FormState>((set, get) => ({
   isPanVerified: false,
   isAadhaarVerified: false,
   isDraftLoaded: false,
-  setStep: (step) => set({ step }),
+  setStep: (step) => {
+    const current = get().step;
+    if (current === step) return;
+    const now = Date.now();
+    // Guard forward transitions with 400ms cooldown to prevent double-incrementing on rapid click
+    if (step > current && now - lastStepChange < 400) {
+      return;
+    }
+    lastStepChange = now;
+    set({ step });
+  },
   setStep1Data: (data) => {
     const current = get().step1Data;
-    if (current && current.loanType !== data.loanType) {
+    const sanitized = sanitizeData(data);
+
+    if (current && current.loanType !== sanitized.loanType) {
       // Clear gstNumber and businessName in Step 5 if changing loanType
       const step5 = get().step5Data;
       let newStep5 = step5;
@@ -75,24 +91,79 @@ const useFormStore = create<FormState>((set, get) => ({
           gstNumber: '',
         } as any;
       }
+
+      // If switching to Business loan, salaried is ineligible. Reset Step 5 entirely.
+      if (sanitized.loanType === 'Business' && step5?.employmentType === 'SALARIED') {
+        newStep5 = null;
+      }
+
+      // Purge PAN verification if PAN entity code becomes invalid for the new loan type
+      const step3 = get().step3Data;
+      let newStep3 = step3;
+      let newPanVerified = get().isPanVerified;
+      if (step3 && step3.panNumber) {
+        const isStillValid = validatePan(step3.panNumber, sanitized.loanType);
+        if (!isStillValid) {
+          newStep3 = null;
+          newPanVerified = false;
+        }
+      }
+
       // Remove businessReg and propertyDocs from Step 7 depending on type
       const step7 = get().step7Data;
       let newStep7 = step7;
       if (step7) {
         newStep7 = {
           ...step7,
-          businessReg: data.loanType === 'Business' ? step7.businessReg : null,
-          propertyDocs: data.loanType === 'Home' ? step7.propertyDocs : null,
+          businessReg: sanitized.loanType === 'Business' ? step7.businessReg : null,
+          propertyDocs: sanitized.loanType === 'Home' ? step7.propertyDocs : null,
+          salarySlips: (sanitized.loanType === 'Business' && step5?.employmentType === 'SALARIED') ? null : step7.salarySlips,
         };
       }
-      set({ step1Data: data, step5Data: newStep5, step7Data: newStep7 });
+
+      set({
+        step1Data: sanitized,
+        step5Data: newStep5,
+        step3Data: newStep3,
+        isPanVerified: newPanVerified,
+        step7Data: newStep7,
+      });
     } else {
-      set({ step1Data: data });
+      set({ step1Data: sanitized });
+    }
+
+    // Clean up dependent Step 6 co-applicant state if changing loan details makes it not required
+    if (!get().isStep6Required()) {
+      set({ step6Data: null });
     }
   },
-  setStep2Data: (data) => set({ step2Data: data }),
-  setStep3Data: (data) => set({ step3Data: data }),
-  setStep4Data: (data) => set({ step4Data: data }),
+  setStep2Data: (data) => {
+    const current = get().step2Data;
+    const sanitized = data ? sanitizeData(data) : null;
+    if (current && sanitized && current.maritalStatus !== sanitized.maritalStatus) {
+      const step6 = get().step6Data;
+      if (step6) {
+        if (sanitized.maritalStatus !== 'Married' && step6.relationship === 'Spouse') {
+          set({
+            step6Data: {
+              ...step6,
+              relationship: '' as any,
+            },
+          });
+        } else if (sanitized.maritalStatus === 'Married') {
+          set({
+            step6Data: {
+              ...step6,
+              relationship: 'Spouse',
+            },
+          });
+        }
+      }
+    }
+    set({ step2Data: sanitized });
+  },
+  setStep3Data: (data) => set({ step3Data: sanitizeData(data) }),
+  setStep4Data: (data) => set({ step4Data: sanitizeData(data) }),
   setStep5Data: (data) => {
     const current = get().step5Data;
     let cleanedData = data;
@@ -125,11 +196,28 @@ const useFormStore = create<FormState>((set, get) => ({
           gstNumber: data.gstNumber || '',
         } as any;
       }
+
+      // Clean up Step 7 documents depending on the new employmentType
+      const step7 = get().step7Data;
+      if (step7) {
+        const newStep7 = { ...step7 };
+        if (data.employmentType !== 'SALARIED') {
+          newStep7.salarySlips = null;
+        }
+        if (data.employmentType === 'SALARIED') {
+          newStep7.itr = null;
+          newStep7.businessReg = null;
+        }
+        if (data.employmentType !== 'BUSINESS_OWNER') {
+          newStep7.businessReg = null;
+        }
+        set({ step7Data: newStep7 });
+      }
     }
-    set({ step5Data: cleanedData });
+    set({ step5Data: data ? sanitizeData(cleanedData) : null });
   },
-  setStep6Data: (data) => set({ step6Data: data }),
-  setStep7Data: (data) => set({ step7Data: data }),
+  setStep6Data: (data) => set({ step6Data: sanitizeData(data) }),
+  setStep7Data: (data) => set({ step7Data: sanitizeData(data) }),
   setSpouseFieldsRequired: (required) => set({ spouseFieldsRequired: required }),
   setStep3Consent: (consent) => set({ step3Consent: consent }),
   setPanVerified: (verified) => set({ isPanVerified: verified }),

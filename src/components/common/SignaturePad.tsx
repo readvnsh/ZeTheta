@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
 import { useRef } from 'react';
 import SignatureCanvas from 'react-signature-canvas';
 
@@ -49,12 +48,22 @@ export default function SignaturePad({
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleContainerClick();
+    }
+  };
+
   return (
     <div className="space-y-1">
       <span className="text-sm font-medium text-gray-700">Digital Signature</span>
       <div
+        role="button"
+        tabIndex={0}
         onClick={handleContainerClick}
-        className={`border-2 rounded-xl p-1 bg-white relative transition-all
+        onKeyDown={handleKeyDown}
+        className={`border-2 rounded-xl p-1 bg-white relative transition-all focus:outline-none focus:ring-2 focus:ring-blue-500
           ${hasError ? 'border-red-300' : 'border-gray-200 hover:border-gray-300'}`}
       >
         <SignatureCanvas

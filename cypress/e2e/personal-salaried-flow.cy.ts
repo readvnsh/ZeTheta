@@ -65,10 +65,15 @@ describe('LendSwift E2E Happy Path - Personal Loan / Salaried', () => {
 
     // ─── STEP 7: DOCUMENTS & SIGNATURE ──────────────────────────────────
     cy.get('input[id="photograph"]').selectFile('cypress/fixtures/test-image.png', { force: true });
+    cy.contains('test-image.png').should('be.visible'); // Wait for image compression to complete
+
     cy.get('input[id="aadhaarFront"]').selectFile('cypress/fixtures/test-document.pdf', { force: true });
     cy.get('input[id="aadhaarBack"]').selectFile('cypress/fixtures/test-document.pdf', { force: true });
     cy.get('input[id="salarySlips"]').selectFile('cypress/fixtures/test-document.pdf', { force: true });
     cy.get('input[id="bankStatements"]').selectFile('cypress/fixtures/test-document.pdf', { force: true });
+
+    // Wait for all 4 PDF uploads to be complete and visible
+    cy.get('p:contains("test-document.pdf")').should('have.length', 4);
 
     // Draw signature
     cy.get('canvas').click({ force: true });

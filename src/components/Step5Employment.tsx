@@ -36,13 +36,19 @@ export default function Step5Employment() {
     formState: { errors },
   } = useForm<Step5FormData>({
     resolver: zodResolver(generateSchema(5, useFormStore.getState())),
-    defaultValues: step5Data || {
+    defaultValues: step5Data || (loanType === 'Business' ? {
+      employmentType: 'SELF_EMPLOYED',
+      businessName: '',
+      businessType: '',
+      yearsInBusiness: '' as any,
+      monthlyIncome: '' as any,
+    } as any : {
       employmentType: 'SALARIED',
       companyName: '',
       designation: '',
       monthlyNetSalary: '' as any,
       yearsOfExperience: '' as any,
-    },
+    }),
   });
 
   const employmentTypeVal = watch('employmentType');
