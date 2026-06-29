@@ -81,6 +81,7 @@ describe('LendSwift E2E Happy Path - Business Loan / Business Owner', () => {
 
     // Draw signature
     cy.get('canvas').click({ force: true });
+    cy.wait(500);
 
     cy.contains('button', 'Proceed').click();
 
